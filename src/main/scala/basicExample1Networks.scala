@@ -19,7 +19,7 @@ object basicExample1Networks {
   val logger = CreateLogger(classOf[basicExample1Networks.type])
 
 
-  @main
+  
   def runSim() = {
     logger.info("Start simulation")
     val cloudsim = new CloudSim()
