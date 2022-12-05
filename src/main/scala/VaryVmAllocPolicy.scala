@@ -17,29 +17,36 @@ import org.cloudsimplus.builders.tables.CloudletsTableBuilder
 
 import collection.JavaConverters.*
 
-object varyVmAllocPolicy {
+object VaryVmAllocPolicy {
 
   val logger = CreateLogger(classOf[basicExample1Networks.type])
   val config = ObtainConfigReference("cloudSimulator") match {
     case Some(value) => value
     case None => throw new RuntimeException("Cannot obtain a reference to the config data.")
   }
+  
+  def driver() = {
+    runSim("Simple")
+    runSim("FirstFit")
+    runSim("BestFit")
+    runSim("RoundRobin")
+  }
 
 //  @main
-  def runSim() = {
-    logger.info("Start simulation")
+  def runSim(vmAllocPolicyArg:String) = {
+    logger.info(s"Start simulation for vm alloc policy $vmAllocPolicyArg")
     val cloudsim = new CloudSim()
-    val dc1 = createDatacenter(cloudsim)
-//    val dc2 = createDatacenter(cloudsim)
+    val dc1 = createDatacenter(cloudsim, vmAllocPolicyArg)
+    val dc2 = createDatacenter(cloudsim, vmAllocPolicyArg)
+    val dc3 = createDatacenter(cloudsim, vmAllocPolicyArg)
     val broker = new DatacenterBrokerSimple(cloudsim)
 
-//    val vm = new VmSimple(
-//      config.getLong("cloudSimulator.vm.mipsCapacity"),
-//      config.getInt("cloudSimulator.host.numPes")
-//    )
-//      .setRam(config.getLong("cloudSimulator.vm.RAMInMBs"))
-//      .setBw(config.getLong("cloudSimulator.vm.BandwidthInMBps"))
-//      .setSize(config.getLong("cloudSimulator.vm.StorageInMBs"))
+    val networkTopology = new BriteNetworkTopology()
+    cloudsim.setNetworkTopology(networkTopology)
+    networkTopology.addLink(dc1, broker, 5000000, 1)
+    networkTopology.addLink(dc2, broker, 5000000, 1)
+    networkTopology.addLink(dc3, broker, 5000000, 1)
+
     val vmList = List.fill(config.getInt("cloudSimulator.vm.numVms"))(
       new VmSimple(
         config.getLong("cloudSimulator.vm.mipsCapacity"),
@@ -63,7 +70,7 @@ object varyVmAllocPolicy {
     new CloudletsTableBuilder(broker.getCloudletFinishedList()).build();
   }
 
-  def createDatacenter(cloudsim: CloudSim): DatacenterSimple = {
+  def createDatacenter(cloudsim: CloudSim, vmAllocPolicyArg:String): DatacenterSimple = {
     val hostPes = List.fill(config.getInt("cloudSimulator.host.numPes"))
                     (new PeSimple(config.getLong("cloudSimulator.host.mipsCapacity")))
 
@@ -80,7 +87,7 @@ object varyVmAllocPolicy {
           case "SpaceShared" => new VmSchedulerSpaceShared()
       )
     )
-    val vmAllocPolicy = config.getString("cloudSimulator.dc.vmAllocationPolicy") match
+    val vmAllocPolicy = vmAllocPolicyArg match
       case "BestFit" => new VmAllocationPolicyBestFit()
       case "FirstFit" => new VmAllocationPolicyFirstFit()
       case "RoundRobin" => new VmAllocationPolicyRoundRobin()

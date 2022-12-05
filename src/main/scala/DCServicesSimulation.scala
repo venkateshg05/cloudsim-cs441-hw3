@@ -34,9 +34,18 @@ object DCServicesSimulation {
     case Some(value) => value
     case None => throw new RuntimeException("Cannot obtain a reference to the config data.")
   }
-
-  @main
-  def createDcs = {
+  
+  def runDCServicesSim() = {
+    /*
+    Creates the 3 data centers with varying SAAS, FAAS, PAAS & IAAS services
+      Each have their own costs and other configs defined in dataCenterServicesSim.conf
+      For the IAAS the VMs & Cloudlets can be defined in dcIaasSim.conf
+      For the PAAS the Cloudlets can be defined in dcPaasSim.conf
+      For SAAS & FAAS all the params are defined by the cloud org. The cloud org executes the 
+      incoming requests (modelled as cloudlets)
+    
+    Also, submits the VMs and the cloudlets to the broker and starts the simulation 
+    * */
     logger.info("Start simulation")
     val cloudsim = new CloudSim()
     val broker = new DatacenterBrokerSimple(cloudsim)
@@ -61,12 +70,12 @@ object DCServicesSimulation {
     createCloudlets(broker)
     cloudsim.start()
     new CloudletsTableBuilder(broker.getCloudletFinishedList()).build()
-//    createFaasDC(cloudsim, broker)
-//    createPaasDC(cloudsim, broker)
-//    createIaasDC(cloudsim, broker)
   }
 
   def createCloudlets(broker:DatacenterBrokerSimple):Unit = {
+    /*
+    Creates the cloudlets defined in the config files
+    * */
     broker.submitCloudletList(List.concat(
       createCloudlets(
         "dcServicesSimulator.cloudlet1",
@@ -90,6 +99,9 @@ object DCServicesSimulation {
   }
 
   def createIaasVm(vmConfigPath: String): VmSimple = {
+    /*
+    Creates the VMs as part of the IAAS client config
+    */
     val vmConfig = dcIaasConfig.getConfig(vmConfigPath)
     val vm = new VmSimple(
       vmConfig.getLong("mipsCapacity"),
@@ -107,6 +119,9 @@ object DCServicesSimulation {
   }
 
   def createPaasCloudlets(cloudletConfigPath: String): List[CloudletSimple] = {
+    /*
+        Creates the cloudlets as part of the PAAS client config
+        */
     val clConfig = dcIaasConfig.getConfig(cloudletConfigPath)
     val utilizationModel = new UtilizationModelDynamic(
       clConfig.getDouble("utilizationRatio")
@@ -122,6 +137,9 @@ object DCServicesSimulation {
   }
 
   def createIaasCloudlets(cloudletConfigPath: String): List[CloudletSimple] = {
+    /*
+        Creates the cloudlets as part of the IAAS client config
+        */
     val clConfig = dcIaasConfig.getConfig(cloudletConfigPath)
     val utilizationModel = new UtilizationModelDynamic(
       clConfig.getDouble("utilizationRatio")
@@ -137,10 +155,16 @@ object DCServicesSimulation {
   }
 
   def createHostPes(numPes:Int, mipsCapacity:Long):List[PeSimple] = {
+    /*
+        Creates the PEs for the hosts
+        */
     List.fill(numPes)(new PeSimple(mipsCapacity))
   }
 
   def createHost(hostConfigPath:String):HostSimple = {
+    /*
+        Creates the Hosts as part of the cloud org config
+        */
     val hostConfig = dcServicesConfig.getConfig(hostConfigPath)
     val hostPes = createHostPes(
       hostConfig.getInt("numPes"),
@@ -160,6 +184,9 @@ object DCServicesSimulation {
   }
 
   def createVm(vmConfigPath:String):VmSimple = {
+    /*
+      Creates the VMs as part of the cloud org config
+      */
     val vmConfig = dcServicesConfig.getConfig(vmConfigPath)
     val vm = new VmSimple(
       vmConfig.getLong("mipsCapacity"),
@@ -177,6 +204,9 @@ object DCServicesSimulation {
   }
 
   def createCloudlets(cloudletConfigPath:String, utilizationRatio:Double): List[CloudletSimple] = {
+    /*
+      Creates the Cloudlets as part of the cloud org config
+      */
     val clConfig = dcServicesConfig.getConfig(cloudletConfigPath)
     val utilizationModel = new UtilizationModelDynamic(utilizationRatio)
     val cloudletList = List
@@ -190,6 +220,9 @@ object DCServicesSimulation {
   }
 
   def createDC(cloudsim: CloudSim, dcConfigPath:String): DatacenterSimple = {
+    /*
+      Creates the Datacenters as part of the cloud org config
+      */
     val hostList = List(
       createHost(dcConfigPath + ".host1"),
       createHost(dcConfigPath + ".host2"),
