@@ -25,7 +25,7 @@ object varyVmAllocPolicy {
     case None => throw new RuntimeException("Cannot obtain a reference to the config data.")
   }
 
-  @main
+//  @main
   def runSim() = {
     logger.info("Start simulation")
     val cloudsim = new CloudSim()
