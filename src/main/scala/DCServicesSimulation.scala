@@ -18,7 +18,7 @@ import org.cloudsimplus.builders.tables.CloudletsTableBuilder
 import collection.JavaConverters.*
 
 object DCServicesSimulation {
-  val logger = CreateLogger(classOf[basicExample1Networks.type])
+  val logger = CreateLogger(classOf[DCServicesSimulation.type])
   // datacenter config by the cloud org
   val dcServicesConfig = ObtainConfigReference("dcServicesSimulator") match {
     case Some(value) => value

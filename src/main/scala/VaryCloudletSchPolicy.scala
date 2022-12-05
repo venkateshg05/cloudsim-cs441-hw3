@@ -15,19 +15,27 @@ import org.cloudsimplus.builders.tables.CloudletsTableBuilder
 import collection.JavaConverters.*
 object VaryCloudletSchPolicy {
 
-  val logger = CreateLogger(classOf[basicExample1Networks.type])
+  val logger = CreateLogger(classOf[VaryCloudletSchPolicy.type])
   val config = ObtainConfigReference("cloudSimulator") match {
     case Some(value) => value
     case None => throw new RuntimeException("Cannot obtain a reference to the config data.")
   }
 
   def driver() = {
+    /*
+        Creates 2 simulations with data centers having different Cloudlet scheduling policy
+        */
     runSim("TimeShared")
     runSim("SpaceShared")
   }
 
-  //  @main
   def runSim(cloudletSchPolicyArg: String) = {
+    /*
+            Creates the 3 data centers with RoundRobin vm alloc policy
+              Each have their own costs and other configs defined in application.conf
+              The Cloudlet scheduling policy is simulated based on the arg
+            Also, submits the VMs and the cloudlets to the broker and starts the simulation
+            * */
     logger.info(s"Start simulation for cloudlet sch policy $cloudletSchPolicyArg")
     val cloudsim = new CloudSim()
     val dc1 = createDatacenter(cloudsim, "RoundRobin")
@@ -65,6 +73,9 @@ object VaryCloudletSchPolicy {
   }
 
   def createDatacenter(cloudsim: CloudSim, vmAllocPolicyArg: String): DatacenterSimple = {
+    /*
+    Creates the Datacenters as part of the cloud org config
+    */
     val hostPes = List.fill(config.getInt("cloudSimulator.host.numPes"))(new PeSimple(config.getLong("cloudSimulator.host.mipsCapacity")))
 
 
@@ -96,6 +107,9 @@ object VaryCloudletSchPolicy {
   }
 
   def createCloudlets(): List[CloudletSimple] = {
+    /*
+    Creates the cloudlets defined in the config files
+    * */
     val utilizationModel = new UtilizationModelDynamic(
       config.getDouble("cloudSimulator.utilizationRatio")
     )

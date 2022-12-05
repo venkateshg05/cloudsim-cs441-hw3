@@ -19,21 +19,28 @@ import collection.JavaConverters.*
 
 object VaryVmAllocPolicy {
 
-  val logger = CreateLogger(classOf[basicExample1Networks.type])
+  val logger = CreateLogger(classOf[VaryVmAllocPolicy.type])
   val config = ObtainConfigReference("cloudSimulator") match {
     case Some(value) => value
     case None => throw new RuntimeException("Cannot obtain a reference to the config data.")
   }
-  
+
   def driver() = {
+    /*
+    Creates 4 simulations with data centers having different VM allocation policy 
+    */
     runSim("Simple")
     runSim("FirstFit")
     runSim("BestFit")
     runSim("RoundRobin")
   }
 
-//  @main
   def runSim(vmAllocPolicyArg:String) = {
+    /*
+        Creates the 3 data centers with specified vm alloc policy
+          Each have their own costs and other configs defined in application.conf        
+        Also, submits the VMs and the cloudlets to the broker and starts the simulation 
+        * */
     logger.info(s"Start simulation for vm alloc policy $vmAllocPolicyArg")
     val cloudsim = new CloudSim()
     val dc1 = createDatacenter(cloudsim, vmAllocPolicyArg)
@@ -71,6 +78,9 @@ object VaryVmAllocPolicy {
   }
 
   def createDatacenter(cloudsim: CloudSim, vmAllocPolicyArg:String): DatacenterSimple = {
+    /*
+      Creates the Datacenters as part of the cloud org config
+      */
     val hostPes = List.fill(config.getInt("cloudSimulator.host.numPes"))
                     (new PeSimple(config.getLong("cloudSimulator.host.mipsCapacity")))
 
@@ -103,6 +113,9 @@ object VaryVmAllocPolicy {
   }
 
   def createCloudlets(): List[CloudletSimple] = {
+    /*
+      Creates the cloudlets defined in the config files
+      * */
     val utilizationModel = new UtilizationModelDynamic(
       config.getDouble("cloudSimulator.utilizationRatio")
     )
