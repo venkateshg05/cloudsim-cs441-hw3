@@ -56,7 +56,16 @@ needed to execute</li>
 <li>Both BestFit and FirstFit seem to be performing better in this scenario</li>
 </ul>
 
-_**[Insert sim results]**_
+_**Simple allocation policy**_<br>
+<img width="643" alt="image" src="https://user-images.githubusercontent.com/20476080/205841212-8e2233ae-c6f6-4f3f-b6fe-29085060dbb2.png">
+<br>_**FirstFit allocation policy**_<br>
+<img width="646" alt="image" src="https://user-images.githubusercontent.com/20476080/205841396-d3b90955-d660-4667-baa4-a353a46cb12a.png">
+<br>_**BestFit allocation policy**_<br>
+<img width="632" alt="image" src="https://user-images.githubusercontent.com/20476080/205841540-95782f9c-7474-4db1-befa-09ff88e5eb67.png">
+<br>_**RoundRobin allocation policy**_<br>
+<img width="634" alt="image" src="https://user-images.githubusercontent.com/20476080/205841581-18024ae6-df4e-4885-ba28-aecc934bc0c4.png">
+
+
 
 **Effect of Cloudlet Scheduling Policies**
 <p>
@@ -71,9 +80,14 @@ TimeSahred policy gives a better utilization of resources in this case
 </li>
 </ul>
 
-_**[Insert sim results]**_
+_**TimeShared**_<br>
+<img width="635" alt="image" src="https://user-images.githubusercontent.com/20476080/205841978-5cf18d62-2d2a-4381-b750-9f835f67cab3.png">
+<br>_**SpaceShared**_<br>
+<img width="643" alt="image" src="https://user-images.githubusercontent.com/20476080/205842036-0e0633c6-4621-4674-94b3-820aa11e9e38.png"> <br>
 
 **Effect of Datacenters with varying mix of services**
+<br>_**Cloud Architecture**_<br>
+![Cloud arch](https://user-images.githubusercontent.com/20476080/205842260-f44cc912-a49e-42c3-961a-9f770b67eaae.jpg)<br>
 <p>
 The results are shown in below tables. The main observations are:<br>
 </p>
@@ -92,5 +106,5 @@ so that the exact virtual resources can be created and how the resources are uti
 </li>
 </ul>
 
-_**[Insert sim results]**_
+<img width="640" alt="image" src="https://user-images.githubusercontent.com/20476080/205842125-2ce51e8c-8ccd-4d11-8c28-9e2708720c8e.png">
 
