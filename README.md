@@ -46,7 +46,51 @@ The dcIaasSim.conf is assumed to be a client config for their VMs & cloudlets as
 ****
 
 **Simulation Results & Analysis**<br>
-**VM Allocation Policies**
+**Effect of VM Allocation Policies**
 <p>
-![img.png](img.png)
+The results for the 4 different VM alloc policies are shown in below tables. The main observations are:<br>
 </p>
+<ul>
+<li>RoundRobin seems to be not the most ideal choice as some cloudlets are loosing out on having the resources
+needed to execute</li>
+<li>Both BestFit and FirstFit seem to be performing better in this scenario</li>
+</ul>
+
+_**[Insert sim results]**_
+
+**Effect of Cloudlet Scheduling Policies**
+<p>
+The results for the 2 different Cloudlet scheduling policies are shown in below tables. The main observations are:<br>
+</p>
+<ul>
+<li>SpaceShared policy seems to be not the ideal choice as some cloudlets could not be run due to lack of
+space needed to execute them leading to a longer wait time for execution
+</li>
+<li>
+TimeSahred policy gives a better utilization of resources in this case
+</li>
+</ul>
+
+_**[Insert sim results]**_
+
+**Effect of Datacenters with varying mix of services**
+<p>
+The results are shown in below tables. The main observations are:<br>
+</p>
+<ul>
+<li>
+Having separate DCs that are have light machines helps in increased efficiency for processing FAAS & SAAS based 
+requests as these are usually requests that don't require high processing power and RAM 
+</li>
+<li>
+Having provisions for PAAS helps bring down the cost by being able to configure the approx resource utilization 
+your program needs
+</li>
+<li>
+Having provisions for IAAS helps in designing VMs that ensure that your resource utilization can be controlled
+so that the exact virtual resources can be created and how the resources are utilized by your program can be specified
+</li>
+</ul>
+
+_**[Insert sim results]**_
+
